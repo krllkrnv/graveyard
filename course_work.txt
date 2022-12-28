@@ -1,0 +1,1486 @@
+Kirill, [26.05.2021 21:31]
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <windows.h>    
+#include <conio.h>
+#include <random>
+#include <cmath>
+#include <ctime>
+#include <fstream>
+#include <sstream>
+#define RESET   "\033[0m"
+#define BLACK   "\033[30m"      /* Black */
+#define RED     "\033[31m"      /* Red */
+#define GREEN   "\033[32m"      /* Green */
+#define YELLOW  "\033[33m"      /* Yellow */
+#define BLUE    "\033[34m"      /* Blue */
+#define MAGENTA "\033[35m"      /* Magenta */
+#define CYAN    "\033[36m"      /* Cyan */
+#define WHITE   "\033[37m"      /* White */
+#define BOLDBLACK   "\033[1m\033[30m"      /* Bold Black */
+#define BOLDRED     "\033[1m\033[31m"      /* Bold Red */
+#define BOLDGREEN   "\033[1m\033[32m"      /* Bold Green */
+#define BOLDYELLOW  "\033[1m\033[33m"      /* Bold Yellow */
+#define BOLDBLUE    "\033[1m\033[34m"      /* Bold Blue */
+#define BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
+#define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
+#define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
+using namespace std;
+string name1;
+string name2;
+string name3;
+string classname1;
+string classname2;
+string classname3;
+int mhp1=0;
+int mhp2=0;
+int mhp3=0;
+int chp1=0;
+int chp2=0;
+int chp3=0;
+int h1=0;
+int h2=0;
+int h3=0;
+string w1;
+string w2;
+string w3;
+int d1;
+int d2;
+int d3;
+int xprint = 0;
+int yprint = 6;
+int team_gold = 0;
+int who_heals;
+int who_takes_damage;
+int who_deals_damage;
+int who_must_be_deleted;
+int who_equips;
+int n;
+int buy;
+int group_healing;
+struct mob {
+    string mob_name;
+    int mob_health;
+    int mob_damage;
+};
+struct character {
+    string character_name;
+    string character_class;
+    int max_health;
+    int current_health;
+    int healing;
+    string weapon;
+    int damage;
+    character* tail;
+};
+void gotoxy(short x, short y)
+{
+    COORD p = { x,y };
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), p);
+}
+void Waiting() {
+    srand(time(0));
+    for (int i = 3; i > 0; i--) {
+        system("cls");
+        cout << "Поиск противника";
+        Sleep(100);
+        gotoxy(0, 0);
+        cout << "Поиск противника.";
+        Sleep(200);
+        system("cls");
+        gotoxy(0, 0);
+        cout << "Поиск противника..";
+        Sleep(300);
+        system("cls");
+        gotoxy(0, 0);
+        cout << "Поиск противника...";
+        Sleep(400);
+    }
+}
+struct CurrentEnemy {
+    string current_mob_name;
+    int max_mob_health;
+    int current_mob_health;
+    int current_mob_damage;
+    int gold;
+};
+CurrentEnemy enemy;
+void RandomEnemy() {
+    srand(time(0));
+    int random_enemy = rand() % 115 + 0;
+    if (random_enemy < 5) {
+        enemy = { "Бабочка", 5, 5, 1, rand() % 3 + 1 };
+    }
+    else if ((random_enemy >= 5) && (random_enemy < 10)) {
+        enemy = { "Таракан", 5, 5, 5, rand() % 5 + 1 };
+    }
+    else if ((random_enemy >= 10) && (random_enemy < 15)) {
+        enemy = { "Злая курица", 10, 10, 10, rand() % 3 + 1 };
+    }
+    else if ((random_enemy >= 15) && (random_enemy < 20)) {
+        enemy = { "Крыса", 20, 20, 15, rand() % 3 + 1 };
+    }
+    else if ((random_enemy >= 20) && (random_enemy < 25)) {
+        enemy = { "Волк", 35, 35, 35, rand() % 5 + 3 };
+    }
+    else if ((random_enemy >= 25) && (random_enemy < 30)) {
+        enemy = { "Дезертир", 70, 70, 20, rand() % 25 + 10 };
+    }
+    else if ((random_enemy >= 30) && (random_enemy < 35)) {
+        enemy = { "Гоблин", 60, 60, 75, rand() % 20 + 10 };
+    }
+    else if ((random_enemy >= 35) && (random_enemy < 40)) {
+        enemy = { "Бандит", 55, 55, 40, rand() % 25 + 5 };
+    }
+    else if ((random_enemy >= 40) && (random_enemy < 45)) {
+        enemy = { "Наемный убийца", 65, 65, 65, rand() % 55 + 10 };
+    }
+    else if ((random_enemy >= 45) && (random_enemy < 50)) {
+        enemy = { "Вепрь", 150, 150, 35, rand() % 35 + 5 };
+    }
+    else if ((random_enemy >= 50) && (random_enemy < 55)) {
+        enemy = { "Ядовитая змея", 35, 35, 100, rand() % 15 + 1 };
+    }
+    else if ((random_enemy >= 55) && (random_enemy < 60)) {
+
+Kirill, [26.05.2021 21:31]
+enemy = { "Грабитель", 70, 70, 45, rand() % 75 + 20 };
+    }
+    else if ((random_enemy >= 60) && (random_enemy < 65)) {
+        enemy = { "Зомби", 150, 150, 10, rand() % 25 + 10 };
+    }
+    else if ((random_enemy >= 65) && (random_enemy < 70)) {
+        enemy = { "Орк", 175, 175, 25, rand() % 30 + 10 };
+    }
+    else if ((random_enemy >= 70) && (random_enemy < 75)) {
+        enemy = { "Вампир", 100, 100, 30, rand() % 55 + 30 };
+    }
+    else if ((random_enemy >= 75) && (random_enemy < 80)) {
+        enemy = { "Троль", 300, 300, 20, rand() % 30 + 10 };
+    }
+    else if ((random_enemy >= 80) && (random_enemy < 85)) {
+        enemy = { "Призрак", 750, 750, 10, rand() % 70 + 15 };
+    }
+    else if ((random_enemy >= 85) && (random_enemy < 90)) {
+        enemy = { "Гигант", 170, 170, 35, rand() % 100 + 25 };
+    }
+    else if ((random_enemy >= 90) && (random_enemy < 95)) {
+        enemy = { "Демон", 300, 300, 50, rand() % 100 + 50 };
+    }
+    else if ((random_enemy >= 95) && (random_enemy <= 100)) {
+        enemy = { "Дракон", 400, 400, 70, rand() % 500 + 250 };
+    }
+    else if ((random_enemy >= 100) && (random_enemy <= 105)) {
+        enemy = { "Мародер", 75, 75, 35, rand() % 35 + 15 };
+    }
+    else if ((random_enemy >= 105) && (random_enemy <= 110)) {
+        enemy = { "Оборотень", 120, 120, 30, rand() % 50 + 15 };
+    }
+    else if ((random_enemy >= 110) && (random_enemy <= 115)) {
+        enemy = { "Колдун", 55, 55, 70, rand() % 75 + 25 };
+    }
+}
+void CreateBoss() {
+    enemy = {"Ктулху", 700, 700, 100};
+}
+void PrintEnemy() {
+    gotoxy(0, 0);
+    cout << "Противник найден! Это " << enemy.current_mob_name << ".\n";
+    gotoxy(0, 1);
+    cout << "Здоровье противника: " << enemy.current_mob_health << "/" << enemy.max_mob_health << ".\n";
+    gotoxy(0, 2);
+    cout << "Урон противника: " << enemy.current_mob_damage << ".\n";
+}
+void CreateCharacter(character** begin) {
+    string naming;
+    *begin = new character;
+    (*begin)->tail = NULL;
+    character* p = *begin;
+    gotoxy(0, 0);
+    cout << "Введите имя персонажа: ";
+    cin >> naming;
+    (*begin)->character_name = naming;
+    (*begin)->max_health = 0;
+    (*begin)->current_health = 0;
+    (*begin)->damage = 0;
+    (*begin)->healing = 0;
+    (*begin)->weapon = "Без оружия";
+}
+int Length(character* begin)
+{
+    int count = 0;
+    character* lenght = begin;
+    while (lenght)
+    {
+        count++;
+        lenght = lenght->tail;
+    };
+    return count;
+}
+void Print(character* begin) {
+    gotoxy(xprint, yprint);
+    cout << "Золото: " << YELLOW << team_gold << RESET;
+    int el = Length(begin);
+    character* print = begin;
+    int count = 0;
+    while (print && count <= el) {
+        cout << "\nИмя: " << print->character_name << ".\n";
+        cout << "Класс: " << print->character_class << ".\n";
+
+Kirill, [26.05.2021 21:31]
+cout << "Здоровье: " << print->current_health << "/" << print->max_health << "\n";
+        cout << "Оружие: " << print->weapon << ".\n";
+        cout << "Урон: " << print->damage << ".\n";
+        cout << "Исцеление: " << print->healing << ".\n";
+        print = print->tail;
+        ++count;
+    }
+   // cout << "NULL" << endl;//
+    //PrintEnemy();
+}
+void BuyCharacter(character** begin) {
+    srand(time(0));
+    int random = rand() % 13 + 0;
+    string names[14] = { "Бронвалид Леонвальд", "Лил чич", "Richard", "Abdul", "Sofia", "Aigul", "Zuhra", "Azamat", "Rulem", "Eva", "Denis", "Mira", "Ulfr", "Charlie" };
+    string classes[5] = { "Разбойник", "Танк", "Жрец", "Шаман", "Воин" };
+    int n, b;
+    n = 0, b = 0;
+    int el = Length(*begin);
+    int count = 0;
+    character* t = new character;
+    character* t1 = *begin;
+    if (n == 0) {
+        t->tail = t1;
+        *begin = t;
+        t->character_name = names[random];
+        t->character_class = classes[buy];
+        if (t->character_class == "Разбойник") {
+            t->damage = 45;
+            t->max_health = 165;
+            t->current_health = 165;
+            t->healing = 0;
+            t->weapon = "Кинжалы";
+        }
+        else if (t->character_class == "Танк") {
+            t->damage = 10;
+            t->max_health = 400;
+            t->current_health = 400;
+            t->healing = 0;
+            t->weapon = "Кулаки";
+        }
+        else if (t->character_class == "Жрец") {
+            t->damage = 25;
+            t->max_health = 200;
+            t->current_health = 200;
+            t->healing = 15;
+            t->weapon = "Молот";
+        }
+        else if (t->character_class == "Шаман") {
+            t->damage = 25;
+            t->max_health = 125;
+            t->current_health = 125;
+            t->healing = 30;
+            t->weapon = "Посох";
+        }
+        else if (t->character_class == "Воин") {
+            t->damage = 30;
+            t->max_health = 300;
+            t->current_health = 300;
+            t->healing = 0;
+            t->weapon = "Меч";
+        }
+        return;
+    }
+    character* t2 = t1->tail;
+    if (n != 0) {
+        while (t2) {
+            if (count == (n - 1)) {
+                t1->tail = t;
+                t->tail = t2;
+                t->character_name = names[random];
+                t->character_class = classes[buy];
+                if (t->character_class == "Разбойник") {
+                    t->damage = 45;
+                    t->max_health = 165;
+                    t->current_health = 165;
+                    t->healing = 0;
+                    t->weapon = "Кинжалы";
+                }
+                else if (t->character_class == "Танк") {
+
+Kirill, [26.05.2021 21:31]
+t->damage = 10;
+                    t->max_health = 400;
+                    t->current_health = 400;
+                    t->healing = 0;
+                    t->weapon = "Кулаки";
+                }
+                else if (t->character_class == "Жрец") {
+                    t->damage = 25;
+                    t->max_health = 200;
+                    t->current_health = 200;
+                    t->healing = 15;
+                    t->weapon = "Молот";
+                }
+                else if (t->character_class == "Шаман") {
+                    t->damage = 25;
+                    t->max_health = 125;
+                    t->current_health = 125;
+                    t->healing = 30;
+                    t->weapon = "Посох";
+                }
+                else if (t->character_class == "Воин") {
+                    t->damage = 30;
+                    t->max_health = 300;
+                    t->current_health = 300;
+                    t->healing = 0;
+                    t->weapon = "Меч";
+                }
+                return;
+            }
+            ++count;
+            t1 = t1->tail;
+            t2 = t2->tail;
+        }
+    }
+}
+void LoadCharacter1(character** begin) {
+    string n1;
+    *begin = new character;
+    (*begin)->tail = NULL;
+    character* p = *begin;
+    (*begin)->character_name = name1;
+    (*begin)->character_class = classname1;
+    (*begin)->max_health = mhp1;
+    (*begin)->current_health = chp1;
+    (*begin)->damage = d1;
+    (*begin)->healing = h1;
+    (*begin)->weapon = w1;
+}
+void Delete(character** begin) {
+    int count = 0;
+    int el = Length(*begin);
+    if (n >= el || n < 0) {
+        cout << "net elementa";
+        return;
+    }
+    character* t = *begin;
+    character* t1 = t->tail;
+    if (*begin == NULL) {
+        cout << "neh udalyat" << endl;
+        return;
+    }
+    if (n == 0) {
+        *begin = t->tail;
+        delete t;
+    }
+    if (n != 0) {
+        while (t1) {
+            if (count == (n - 1)) {
+                t->tail = t1->tail;
+                delete t1;
+                return;
+            }
+            ++count;
+            t = t->tail;
+            t1 = t1->tail;
+        }
+    }
+}
+void LoadCharacter2(character** begin) {
+    int n, b;
+    n = 0, b = 0;
+    int el = Length(*begin);
+    int count = 0;
+    character* t = new character;
+    character* t1 = *begin;
+    if (n == 0) {
+        t->tail = t1;
+        *begin = t;
+        t->character_name = name2;
+        t->character_class = classname2;
+        t->damage = d2;
+        t->max_health = mhp2;
+        t->current_health = chp2;
+        t->healing = h2;
+        t->weapon = w2;
+        return;
+    }
+    character* t2 = t1->tail;
+    if (n != 0) {
+        while (t2) {
+            if (count == (n - 1)) {
+                t1->tail = t;
+                t->tail = t2;
+                t->character_name = name2;
+                t->character_class = classname2;
+                t->damage = d2;
+                t->max_health = mhp2;
+                t->current_health = chp2;
+                t->healing = h2;
+                t->weapon = w2;
+                return;
+            }
+            ++count;
+            t1 = t1->tail;
+            t2 = t2->tail;
+        }
+    }
+}
+void LoadCharacter3(character** begin) {
+    int n, b;
+    n = 0, b = 0;
+    int el = Length(*begin);
+    int count = 0;
+    character* t = new character;
+    character* t1 = *begin;
+    if (n == 0) {
+        t->tail = t1;
+        *begin = t;
+        t->character_name = name3;
+        t->character_class = classname3;
+        t->damage = d3;
+        t->max_health = mhp3;
+        t->current_health = chp3;
+        t->healing = h3;
+        t->weapon = w3;
+        return;
+    }
+    character* t2 = t1->tail;
+    if (n != 0) {
+        while (t2) {
+            if (count == (n - 1)) {
+                t1->tail = t;
+                t->tail = t2;
+                t->character_name = name3;
+                t->character_class = classname3;
+                t->damage = d3;
+                t->max_health = mhp3;
+                t->current_health = chp3;
+
+Kirill, [26.05.2021 21:31]
+t->healing = h3;
+                t->weapon = w3;
+                return;
+            }
+            ++count;
+            t1 = t1->tail;
+            t2 = t2->tail;
+        }
+    }
+}
+void LoadCheckDeath(character** begin) {
+  
+    character* t = *begin;
+    int count = 0;
+   int el = Length(*begin);
+    while (t) {
+       
+        if (t->current_health <= 0) {
+            t->current_health = t->current_health - enemy.current_mob_damage;
+            gotoxy(0, 4);
+            n = who_takes_damage;
+            Delete(begin);
+            return;
+        }
+        ++count;
+        t = t->tail;
+        }
+        
+    }
+
+
+/*
+//weapon//
+struct weapon NoneWeapon = { "No weapon", 0, 0 };
+struct weapon WoodenSword = { "Wooden sword", 10, 10 };
+struct weapon IronSword = { "Iron sword", 15, 20 };
+struct weapon GoldenSword = { "Golden sword", 30, 15 };
+struct weapon DemonSword = { "Demon sword", 45, 25 };
+struct weapon MagicBook = { "Magic book", 85, 2 };
+struct weapon DiamondSword = { "Diamond sword", 50, 30 };
+struct weapon WizardStaff = { "Wizard staff", 60, 15 };
+struct weapon SpellOfDestruction = { "Spell of destruction", 500, 1 };
+//armor//
+struct armor LeatherArmor = { "Leather armor", 5, 10 };
+struct armor IronArmor = { "Iron armor", 7, 15 };
+struct armor NoneArmor = { "No armor", 0, 0 };
+struct armor MagicCoat = { "Magic coat", 20, 15 };
+struct armor DemonicArmor = { "Demonic armor", 25, 25 };
+struct armor WoodenShield = { "Wooden shield", 5, 15 };
+struct armor DefensiveSpell = { "Defensive Spell", 50, 2 };
+*/
+void SaveGame(character** begin) {
+    character* t = *begin;
+    string path = "Save.txt";
+    ofstream fout;
+    fout.open(path);
+    if (!fout.is_open()) {
+        cout << "Ошибка открытия файла!" << endl;
+        Sleep(1000);
+    }
+    else {
+        fout << team_gold << "\n";
+        while (t) {
+            fout << t->character_name<<"\n";
+            fout << t->character_class << "\n";
+            fout << t->max_health << "\n";
+            fout << t->current_health << "\n";
+            fout << t->healing << "\n";
+            fout << t->weapon << "\n";
+            fout << t->damage << "\n";
+            t = t->tail;
+        }
+        fout.close();
+    }
+}
+void LoadGame(character** begin) {
+    character* t = *begin;
+    string path = "Save.txt";
+    ifstream fin;
+    fin.open(path);
+    if (!fin.is_open())
+    {
+        cout << "Ошибка открытия файла!";
+        Sleep(1000);
+    }
+    else {
+        fin >> team_gold;
+        fin >> name1;//
+        fin >> classname1;
+        fin >> mhp1;
+        fin >> chp1;
+        fin >> h1;
+        fin >> w1;
+        fin >> d1;
+        fin >> name2;//
+        fin >> classname2;
+        fin >> mhp2;
+        fin >> chp2;
+        fin >> h2;
+        fin >> w2;
+        fin >> d2;
+        fin >> name3;//
+        fin >> classname3;
+        fin >> mhp3;
+        fin >> chp3;
+        fin >> h3;
+        fin >> w3;
+        fin >> d3;
+       
+    }
+    fin.close();
+}
+void GroupHealing(character** begin) {
+    character* t = *begin;
+    int count = 0;
+    int el = Length(*begin);
+    while (t) {
+        if (t) {
+            gotoxy(0, 4);
+            cout << "Персонаж " << BLUE << t->character_name << RESET << " класса " << BLUE << t->character_class << RESET << " исцеляет " << GREEN << group_healing << RESET << " здоровья.";
+            Sleep(1500);
+            t->current_health = t->current_health + group_healing;
+            if (t->current_health > t->max_health) {
+                t->current_health = t->max_health;
+            }
+            ++count;
+            t = t->tail;
+        }
+    }
+}
+void ShopHealing(character** begin) {
+    character* t = *begin;
+    int count = 0;
+    int el = Length(*begin);
+    while (t) {
+        t->current_health = t->max_health;
+        ++count;
+        t = t->tail;
+    }
+}
+void WeaponShopMenu() {
+    system("cls");
+    cout << "1. Купить " << RED << "рапиру" << RESET << ". " << YELLOW << "30" << RESET << " золота." << endl;;
+    cout << "2. Купить " << CYAN << "железный меч" << RESET << ". " << YELLOW << "45" << RESET << " золота." << endl;
+
+Kirill, [26.05.2021 21:31]
+cout << "3. Купить " << BLUE << "боевой топор" << RESET << ". " << YELLOW << "60" << RESET << " золота" << endl;
+    cout << "4. Купить " << MAGENTA << "магический молот" << RESET << ". " << YELLOW << "75" << RESET << " золота." << endl;
+    cout << "5. Купить" << GREEN << " исцеляющий посох" << RESET << ". " << YELLOW << "90" << RESET << " золота." << endl;
+    cout << "6. Выход" << endl;
+}
+void EquipRapier(character** begin) {
+    int count = 0;
+    gotoxy(0, 10);
+    cout << "Кого снарядить рапирой?" << endl;;
+    cin >> who_equips;
+    int el = Length(*begin);
+    while (who_equips >= el || who_equips < 0) {
+        cout << "Такого элемента не существует" << endl;
+        cin >> who_equips;
+    }
+    character* t = *begin;
+    if (*begin == NULL)
+    {
+        cout << "Нечего менять" << endl;
+        return;
+    }
+    while (t)
+    {
+        if (count == n) {
+            t->damage = 30;
+            t->weapon = "Рапира";
+            return;
+        }
+        ++count;
+        t = t->tail;
+    }
+}
+void EquipSword(character** begin) {
+    int count = 0;
+    gotoxy(0, 10);
+    cout << "Кого снарядить мечом?" << endl;;
+    cin >> who_equips;
+    int el = Length(*begin);
+    while (who_equips >= el || who_equips < 0) {
+        cout << "Такого элемента не существует" << endl;
+        cin >> who_equips;
+    }
+    character* t = *begin;
+    if (*begin == NULL)
+    {
+        cout << "Нечего менять" << endl;
+        return;
+    }
+    while (t)
+    {
+        if (count == n) {
+            t->damage = 30;
+            t->weapon = "Железный меч";
+            return;
+        }
+        ++count;
+        t = t->tail;
+    }
+}
+void EquipAxe(character** begin) {
+    int count = 0;
+    gotoxy(0, 10);
+    cout << "Кого снарядить топором?" << endl;;
+    cin >> who_equips;
+    int el = Length(*begin);
+    while (who_equips >= el || who_equips < 0) {
+        cout << "Такого элемента не существует" << endl;
+        cin >> who_equips;
+    }
+    character* t = *begin;
+    if (*begin == NULL)
+    {
+        cout << "Нечего менять" << endl;
+        return;
+    }
+    while (t)
+    {
+        if (count == n) {
+            t->damage = 45;
+            t->weapon = "Боевой топор";
+            return;
+        }
+        ++count;
+        t = t->tail;
+    }
+}
+void EquipMagic(character** begin) {
+    int count = 0;
+    gotoxy(0, 10);
+    cout << "Кого снарядить магическим посохом?" << endl;;
+    cin >> who_equips;
+    int el = Length(*begin);
+    while (who_equips >= el || who_equips < 0) {
+        cout << "Такого элемента не существует" << endl;
+        cin >> who_equips;
+    }
+    character* t = *begin;
+    if (*begin == NULL)
+    {
+        cout << "Нечего менять" << endl;
+        return;
+    }
+    while (t)
+    {
+        if (count == n) {
+            t->damage = 60;
+            t->weapon = "Магический посох";
+            return;
+        }
+        ++count;
+        t = t->tail;
+    }
+}
+void EquipHealing(character** begin) {
+    int count = 0;
+    gotoxy(0, 10);
+    cout << "Кого снарядить исцеляющим посохом?" << endl;;
+    cin >> who_equips;
+    int el = Length(*begin);
+    while (who_equips >= el || who_equips < 0) {
+        cout << "Такого элемента не существует" << endl;
+        cin >> who_equips;
+    }
+    character* t = *begin;
+    if (*begin == NULL)
+    {
+        cout << "Нечего менять" << endl;
+        return;
+    }
+    while (t)
+    {
+        if (count == n) {
+            t->damage = 100;
+            t->weapon = "Исцеляющий посох";
+            t->healing = 35;
+            return;
+        }
+        ++count;
+        t = t->tail;
+    }
+}
+void WeaponShop(character** begin) {
+    int WeaponShop_symbol = 0, WeaponShop_menu = 0;
+    const int WeaponShop_menu_positions = 6;
+    while (WeaponShop_symbol != 27) {
+        WeaponShopMenu();
+        gotoxy(40, WeaponShop_menu);
+        cout << "<---";
+        WeaponShop_symbol = _getch();
+        if (WeaponShop_symbol == 224) {
+            WeaponShop_symbol = _getch();
+        }
+        switch (WeaponShop_symbol) {
+        case 72: WeaponShop_menu--;
+            break;
+        case 80: WeaponShop_menu++;
+
+Kirill, [26.05.2021 21:31]
+break;
+        case 49: WeaponShop_menu = 0;
+            break;
+        case 50: WeaponShop_menu = 1;
+            break;
+        case 51: WeaponShop_menu = 2;
+            break;
+        case 52: WeaponShop_menu = 3;
+            break;
+        case 53: WeaponShop_menu = 4;
+            break;
+        case 54: WeaponShop_menu = 5;
+            break;
+        case 13: {
+            if (WeaponShop_menu == 0) {
+                if (team_gold < 30) {
+                    cout << "Недостаточно золота!";
+                    Sleep(1000);
+                }
+                else { 
+                    EquipRapier(begin); 
+                    team_gold = team_gold - 30;
+                }
+            }
+            else if (WeaponShop_menu == 1) {
+                if (team_gold < 45) {
+                    cout << "Недостаточно золота!";
+                    Sleep(1000);
+                }
+                else {
+                    EquipSword(begin);
+                    team_gold = team_gold - 45;
+                }
+            }
+            else if (WeaponShop_menu == 2) {
+                if (team_gold < 60) {
+                    cout << "Недостаточно золота!";
+                    Sleep(1000);
+                }
+                else {
+                    EquipAxe(begin);
+                    team_gold = team_gold - 60;
+                }
+            }
+            else if (WeaponShop_menu == 3) {
+                if (team_gold < 75) {
+                    cout << "Недостаточно золота!";
+                    Sleep(1000);
+                }
+                else {
+                    EquipMagic(begin);
+                    team_gold = team_gold - 75;
+                }
+            }
+            else if (WeaponShop_menu == 4) {
+                if (team_gold < 90) {
+                    cout << "Недостаточно золота!";
+                    Sleep(1000);
+                }
+                else {
+                    EquipHealing(begin);
+                    team_gold = team_gold - 90;
+                }
+            }
+            else if (WeaponShop_menu == 5) {
+                return;
+            }
+        }
+        }
+        if (WeaponShop_menu < 0) { WeaponShop_menu = 5; }
+        else if (WeaponShop_menu > WeaponShop_menu_positions - 1) { WeaponShop_menu = 0; }
+    }
+}
+void MenuShop() {
+    system("cls");
+    cout << "1. Нанять персонажа." << YELLOW << " 100 " << RESET << "золота.\n";
+    cout << "2. Пополнить здоровье."<<YELLOW<<" 30 "<<RESET<<"золота.\n";
+    cout << "3. Купить оружие. \n";
+    cout << "4. Выход. \n";
+}
+void MenuBuyCharacter() {
+    system("cls");
+    cout << "1. Нанять "<<GREEN<<"разбойника"<<RESET<<".\n";
+    cout << "2. Нанять " << CYAN << "танка" << RESET << ".\n";
+    cout << "3. Нанять " << YELLOW << "жреца" << RESET << ".\n";
+    cout << "4. Нанять " << MAGENTA << "шамана" << RESET << ".\n";
+    cout << "5. Нанять " << RED << "воина" << RESET << ".\n";
+}
+void MenuOfCharacterBuying(character** begin) {
+    int MenuOfCharacterBuying_symbol = 0, MenuOfCharacterBuying_menu = 0;
+    const int MenuOfCharacterBuying_menu_positions = 5;
+    while (MenuOfCharacterBuying_symbol != 27) {
+        MenuBuyCharacter();
+        gotoxy(40, MenuOfCharacterBuying_menu);
+        cout << "<---";
+        MenuOfCharacterBuying_symbol = _getch();
+        if (MenuOfCharacterBuying_symbol == 224) {
+            MenuOfCharacterBuying_symbol = _getch();
+        }
+        switch (MenuOfCharacterBuying_symbol) {
+        case 72: MenuOfCharacterBuying_menu--;
+            break;
+        case 80: MenuOfCharacterBuying_menu++;
+            break;
+        case 49: MenuOfCharacterBuying_menu = 0;
+            break;
+        case 50: MenuOfCharacterBuying_menu = 1;
+            break;
+        case 51: MenuOfCharacterBuying_menu = 2;
+            break;
+        case 52: MenuOfCharacterBuying_menu = 3;
+            break;
+        case 53: MenuOfCharacterBuying_menu = 4;
+            break;
+        case 54: MenuOfCharacterBuying_menu = 5;
+            break;
+        case 13: if (MenuOfCharacterBuying_menu == 0) {
+            
+            if (Length(*begin) >= 3) {
+
+Kirill, [26.05.2021 21:31]
+cout << "Максимальное количество в отряде";
+                Sleep(500);
+            }
+            else {
+                buy = 0;
+                BuyCharacter(begin);
+                team_gold = team_gold - 100;
+            }
+           
+            break;
+
+        }
+               else if (MenuOfCharacterBuying_menu == 1) {
+           
+            if (Length(*begin) >= 3) {
+                cout << "Максимальное количество в отряде";
+                Sleep(500);
+            }
+            else {
+                buy = 1;
+                BuyCharacter(begin);
+                team_gold = team_gold - 100;
+            }
+
+           
+            break;
+        }
+               else  if (MenuOfCharacterBuying_menu == 2) {
+           
+            if (Length(*begin) >= 3) {
+                cout << "Максимальное количество в отряде";
+                Sleep(500);
+            }
+            else {
+                buy = 2;
+                BuyCharacter(begin);
+                team_gold = team_gold - 100;
+            }
+
+            break;
+        }
+               else if (MenuOfCharacterBuying_menu == 3) {
+            if (Length(*begin) >= 3) {
+                cout << "Максимальное количество в отряде";
+                Sleep(500);
+            }
+            else {
+                buy = 3;
+                BuyCharacter(begin);
+                team_gold = team_gold - 100;
+            }
+
+            
+            break;
+        }
+               else if (MenuOfCharacterBuying_menu == 4) {
+           
+            if (Length(*begin) >= 3) {
+                cout << "Максимальное количество в отряде";
+                Sleep(500);
+            }
+            else {
+                buy = 4;
+                BuyCharacter(begin);
+                team_gold = team_gold - 100;
+            }
+           
+           
+            break;
+        }
+        }
+        if (MenuOfCharacterBuying_menu < 0) { MenuOfCharacterBuying_menu = 4; }
+        else if (MenuOfCharacterBuying_menu > MenuOfCharacterBuying_menu_positions - 1) { MenuOfCharacterBuying_menu = 0; }
+    }
+}
+void MainMenu() {
+    system("cls");
+    cout << "1. Начать новую игру." << endl;
+    cout << "2. Загрузить." << endl;
+    cout << "3. Выход." << endl;
+}
+void GameMenu() {
+    system("cls");
+    cout << "1. Искать противников." << endl;
+    cout << "2. Отправиться на битву с боссом." << endl;
+    cout << "3. Магазин." << endl;
+    cout << "4. Сохранить игру." << endl;
+    cout << "5. Выход в меню." << endl;
+}
+void CharacterClassChooseMenu() {
+    system("cls");
+    cout << "1." << GREEN << " Разбойник." << RESET << " Мало здоровья, высокий урон. " << endl;
+    cout << "2." << CYAN << " Танк." << RESET << "  Очень много здоровья, маленький урон. " << endl;
+    cout << "3." << YELLOW << " Жрец." << RESET << " Среднее количество здоровья, малое исцеление, средний урон. " << endl;
+    cout << "4." << MAGENTA << " Шаман." << RESET << " Мало здоровья, высокий урон, сильное исцеление. " << endl;
+    cout << "5." << RED << " Воин." << RESET << " Средний урон, большое количество здоровья. " << endl;
+}
+void ShopRealization(character** begin) {
+    int ShopRealization_symbol = 0, ShopRealization_menu = 0;
+    const int ShopRealization_menu_positions = 4;
+    while (ShopRealization_symbol != 27) {
+        MenuShop();
+        gotoxy(35, ShopRealization_menu);
+        cout << "<---";
+        ShopRealization_symbol = _getch();
+        if (ShopRealization_symbol == 224) {
+            ShopRealization_symbol = _getch();
+        }
+        switch (ShopRealization_symbol) {
+        case 72: ShopRealization_menu--;
+            break;
+        case 80: ShopRealization_menu++;
+            break;
+        case 49: ShopRealization_menu = 0;
+            break;
+        case 50: ShopRealization_menu = 1;
+            break;
+        case 51: ShopRealization_menu = 2;
+            break;
+        case 52: ShopRealization_menu = 3;
+            break;
+        case 53: ShopRealization_menu = 4;
+            break;
+        case 54: ShopRealization_menu = 5;
+            break;
+        case 13: if (ShopRealization_menu == 0) {
+
+Kirill, [26.05.2021 21:31]
+if (Length(*begin) < 3) {        
+                if (team_gold >= 100) {
+                    MenuOfCharacterBuying(begin);
+                    Print(*begin);
+                }
+                else {
+                    gotoxy(0, 6);
+                    cout << "Недостаточно золота!";
+                    Sleep(1000);
+                }
+            }
+            else {
+                cout << "Максимальное количество в отряде";
+                Sleep(500);
+                Print(*begin);
+            }
+            break;
+        }
+               else if (ShopRealization_menu == 1) {
+            if (team_gold < 30) {
+                gotoxy(0, 6);
+                cout << "Недостаточно золота!";
+                Sleep(1000);
+            }
+               else {
+           ShopHealing(begin);
+            cout << "Здоровье отряда востановленно!";
+            team_gold = team_gold - 30;
+            Sleep(1500);
+            return;
+        }
+            break;
+        }
+               else  if (ShopRealization_menu == 2) {
+            WeaponShop(begin);
+            return;
+            break;
+        }
+               else if (ShopRealization_menu == 3) {
+            return;
+            break;
+        }
+              
+        }
+        if (ShopRealization_menu < 0) { ShopRealization_menu = 3; }
+        else if (ShopRealization_menu > ShopRealization_menu_positions - 1) { ShopRealization_menu = 0; }
+    }
+}
+void MenuOfCharacterClass(character** begin) {
+    CreateCharacter(begin);
+    int MenuOfCharacterClass_symbol = 0, MenuOfCharacterClass_menu = 0;
+    const int MenuOfCharacterClass_menu_positions = 5;
+    while (MenuOfCharacterClass_symbol != 27) {
+        CharacterClassChooseMenu();
+        gotoxy(70, MenuOfCharacterClass_menu);
+        cout << "<---";
+        MenuOfCharacterClass_symbol = _getch();
+        if (MenuOfCharacterClass_symbol == 224) {
+            MenuOfCharacterClass_symbol = _getch();
+        }
+        switch (MenuOfCharacterClass_symbol) {
+        case 72: MenuOfCharacterClass_menu--;
+            break;
+        case 80: MenuOfCharacterClass_menu++;
+            break;
+        case 49: MenuOfCharacterClass_menu = 0;
+            break;
+        case 50: MenuOfCharacterClass_menu = 1;
+            break;
+        case 51: MenuOfCharacterClass_menu = 2;
+            break;
+        case 52: MenuOfCharacterClass_menu = 3;
+            break;
+        case 53: MenuOfCharacterClass_menu = 4;
+            break;
+        case 54: MenuOfCharacterClass_menu = 5;
+            break;
+        case 13: if (MenuOfCharacterClass_menu == 0) {
+            (*begin)->character_class = "Разбойник";
+            (*begin)->damage = 45;
+            (*begin)->max_health = 165;
+            (*begin)->current_health = 165;
+            (*begin)->weapon = "Кинжалы";
+            return;
+            break;
+        }
+               else if (MenuOfCharacterClass_menu == 1) {
+            (*begin)->character_class = "Танк";
+            (*begin)->damage = 10;
+            (*begin)->max_health = 400;
+            (*begin)->current_health = 400;
+            (*begin)->weapon = "Кулаки";
+            return;
+            break;
+        }
+               else  if (MenuOfCharacterClass_menu == 2) {
+            (*begin)->character_class = "Жрец";
+            (*begin)->healing = 25;
+            (*begin)->max_health = 200;
+            (*begin)->current_health = 200;
+            (*begin)->damage = 15;
+            (*begin)->weapon = "Молот";
+            return;
+            break;
+        }
+               else if (MenuOfCharacterClass_menu == 3) {
+            (*begin)->character_class = "Шаман";
+            (*begin)->damage = 25;
+            (*begin)->max_health = 125;
+            (*begin)->current_health = 125;
+            (*begin)->weapon = "Посох";
+            (*begin)->healing = 30;
+            return;
+            break;
+        }
+               else if (MenuOfCharacterClass_menu == 4) {
+            (*begin)->character_class = "Воин";
+            (*begin)->damage = 30;
+            (*begin)->max_health = 300;
+            (*begin)->current_health = 300;
+Kirill, [26.05.2021 21:31]
+(*begin)->weapon = "Меч";
+            return;
+            break;
+        }
+        }
+        if (MenuOfCharacterClass_menu < 0) { MenuOfCharacterClass_menu = 4; }
+        else if (MenuOfCharacterClass_menu > MenuOfCharacterClass_menu_positions - 1) { MenuOfCharacterClass_menu = 0; }
+    }
+}
+void EnemyTakesDamage(character** begin) {
+    srand(time(0));
+    int el = Length(*begin);
+    who_takes_damage = rand() % el + 0;
+    who_deals_damage = rand() % el + 0;
+    if (enemy.current_mob_health > 0) {
+        int count = 0;
+        int el = Length(*begin);
+        character* t = *begin;
+        if (*begin == NULL)
+        {
+            cout << "Нечего менять" << endl;
+            return;
+        }
+        while (t)
+        {
+            if (count == who_deals_damage) {
+                if (enemy.current_mob_health <= 0) {
+                    gotoxy(0, 4);
+                    cout << "Противник повержен! Вы получили " << YELLOW << enemy.gold << RESET << " золота";
+                    team_gold = team_gold + enemy.gold;
+                    Sleep(1500);
+                    return;
+                }
+                else {
+                    if (enemy.current_mob_health > 0) {
+                        enemy.current_mob_health = enemy.current_mob_health - t->damage;
+
+                        gotoxy(0, 4);
+                        cout << "Персонаж " << BLUE << t->character_name << RESET << " наносит противнику " << RED << enemy.current_mob_name << RESET << " " << RED << t->damage << RESET << " урона!";
+                        Sleep(1500);
+                        gotoxy(0, 4);
+                        cout << "                                                                               ";
+                        return;
+                    }
+                }
+            }
+            ++count;
+            t = t->tail;
+        }
+    }
+    else return;
+}
+void CheckDeath(character** begin) {
+    srand(time(0));
+    int el = Length(*begin);
+    who_takes_damage = rand() % el + 0;
+    who_deals_damage = rand() % el + 0;
+    character* t = *begin;
+    int count = 0;
+    el = Length(*begin);
+    while (t) {
+        if (count == who_takes_damage) {
+            if (t->current_health > 0) {
+                t->current_health = t->current_health - enemy.current_mob_damage;
+                gotoxy(0, 4);
+                cout << "Противник " << RED << enemy.current_mob_name << RESET << " наносит персонажу " << BLUE << t->character_name << RESET << " класса " << BLUE << t->character_class << RESET << " " << RED << enemy.current_mob_damage << RESET << " урона!";
+                Sleep(1500);
+                gotoxy(0, 4);
+                cout << "                                                                               ";
+                return;
+            }
+
+Kirill, [26.05.2021 21:31]
+else {
+                if (t->current_health <= 0) {
+                    t->current_health = t->current_health - enemy.current_mob_damage;
+                    gotoxy(0, 4);
+                    cout << "Персонаж " << t->character_name << RED << " погиб" << RESET << "!";
+                    n = who_takes_damage;
+                    Delete(begin);
+                    Sleep(1500);
+                    return;
+                }
+            }
+        }
+        ++count;
+        t = t->tail;
+    }
+}
+void OnlyCheckDamage(character** begin) {
+    character* t = *begin;
+    int count = 0;
+    int el = Length(*begin);
+    while (t) {
+        if (count == who_takes_damage) {
+           
+                if (t->current_health <= 0) {
+                    t->current_health = t->current_health - enemy.current_mob_damage;
+                    gotoxy(0, 4);
+                    cout << "Персонаж " << t->character_name << RED << " погиб" << RESET << "!";
+                    n = who_takes_damage;
+                    Delete(begin);
+                    Sleep(1500);
+                    return;
+                }
+            
+        }
+        ++count;
+        t = t->tail;
+    }
+}
+void ChooseWhoHeals(character** begin) {
+    character* t = *begin;
+    int count = 0;
+    int el = Length(*begin);
+    while (t) {
+        if (count == who_heals) {
+            if (t->healing > 0) {
+                group_healing = t->healing;
+            }
+        }
+        ++count;
+        t = t->tail;
+    }
+}
+void MenuFight(character* begin) {
+    system("cls");
+    Print(begin);
+    PrintEnemy();
+}
+int GameOver() {
+    return 0;
+}
+void Fight(character* begin) {
+    Waiting();
+    while (enemy.current_mob_health > 0) {
+        if (Length(begin) > 0) {
+            int el = Length(begin);
+            who_takes_damage = rand() % el + 0;
+            who_deals_damage = rand() % el + 0;
+            who_heals = rand() % el + 0;
+            srand(time(0));
+            PrintEnemy();
+            MenuFight(begin);
+            Sleep(1000);
+            EnemyTakesDamage(&begin);
+            MenuFight(begin);
+            Sleep(1000);
+            if (enemy.current_mob_health <= 0) {
+                gotoxy(0, 4);
+                cout << "Противник повержен! Вы получили " << YELLOW << enemy.gold << RESET << " золота";
+                team_gold = team_gold + enemy.gold;
+                Sleep(2000);
+                return;
+            }
+            CheckDeath(&begin);
+            MenuFight(begin);
+            OnlyCheckDamage(&begin);
+            ChooseWhoHeals(&begin);
+            GroupHealing(&begin);
+            Sleep(500);
+   
+        }
+        else if (Length(begin) <= 0){
+            gotoxy(0, 6);
+            cout<<"\n"<< RED << "GAVE OVER\n" << RESET;
+            Sleep(1250);
+            cout << "Завершение работы...";
+            Sleep(1250);
+            system("cls");
+            exit(0);
+            return;
+        }
+    }
+    
+    MenuFight(begin);
+}
+void BossFight(character* begin) {
+    while (enemy.current_mob_health > 0) {
+        if (Length(begin) > 0) {
+            int el = Length(begin);
+            who_takes_damage = rand() % el + 0;
+            who_deals_damage = rand() % el + 0;
+            who_heals = rand() % el + 0;
+            srand(time(0));
+            PrintEnemy();
+            MenuFight(begin);
+            Sleep(1000);
+            EnemyTakesDamage(&begin);
+            MenuFight(begin);
+            Sleep(1000);
+            if (enemy.current_mob_health <= 0) {
+                gotoxy(0, 4);
+                cout << "Противник повержен! Поздравляем, вы прошли игру.";
+                Sleep(2000);
+                return;
+                exit(0);
+            }
+            CheckDeath(&begin);
+            MenuFight(begin);
+            OnlyCheckDamage(&begin);
+            ChooseWhoHeals(&begin);
+            GroupHealing(&begin);
+            MenuFight(begin);
+            Sleep(500);
+
+Kirill, [26.05.2021 21:31]
+}
+        else if (Length(begin) <= 0) {
+            gotoxy(0, 6);
+            cout << RED << "GAVE OVER\n" << RESET;
+            Sleep(1250);
+            cout << "Завершение работы...";
+            Sleep(1250);
+            system("cls");
+            exit(0);
+            return;
+        }
+    }
+
+    MenuFight(begin);
+}
+void GameMenuRealization(character* begin) {
+    int GameMenuRealization_symbol = 0, GameMenuRealization_menu = 0;
+    const int GameMenuRealization_menu_positions = 5;
+    while (GameMenuRealization_symbol != 27) {
+        GameMenu();
+        Print(begin);
+        gotoxy(50, GameMenuRealization_menu);
+        cout << "<---";
+        GameMenuRealization_symbol = _getch();
+        if (GameMenuRealization_symbol == 224) {
+            GameMenuRealization_symbol = _getch();
+        }
+        switch (GameMenuRealization_symbol) {
+        case 72: GameMenuRealization_menu--;
+            break;
+        case 80: GameMenuRealization_menu++;
+            break;
+        case 49: GameMenuRealization_menu = 0;
+            break;
+        case 50: GameMenuRealization_menu = 1;
+            break;
+        case 51: GameMenuRealization_menu = 2;
+            break;
+        case 52: GameMenuRealization_menu = 3;
+            break;
+        case 53: GameMenuRealization_menu = 4;
+            break;
+        case 54: GameMenuRealization_menu = 5;
+        case 13: if (GameMenuRealization_menu == 0) {
+            srand(time(0));
+            RandomEnemy();
+            srand(time(0));
+            Fight(begin);
+            // Print(begin);
+        }
+               else if (GameMenuRealization_menu == 1) {
+            CreateBoss();
+            srand(time(0));
+            BossFight(begin);
+
+        }
+               else  if (GameMenuRealization_menu == 2) {
+            ShopRealization(&begin);
+        }
+               else if (GameMenuRealization_menu == 3) {
+            SaveGame(&begin);
+        }
+               else if (GameMenuRealization_menu == 4) {
+            return;
+        }
+        }
+
+        if (GameMenuRealization_menu < 0) { GameMenuRealization_menu = 4; }
+        else if (GameMenuRealization_menu > GameMenuRealization_menu_positions - 1) { GameMenuRealization_menu = 0; }
+
+
+    }
+}
+int main(character* begin)
+{
+    srand(time(0));
+    const int menu_points = 3;
+    int  symbol = 0, menu = 0;
+    setlocale(LC_ALL, "Russian");
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+    while (symbol != 27) {
+        MainMenu();
+        gotoxy(40, menu);
+        cout << "<===";
+        symbol = _getch();
+        switch (symbol) {
+        case 72: menu--;
+            break;
+        case 80: menu++;
+            break;
+        case 49: menu = 0;
+            break;
+        case 50:
+            menu = 1;
+            break;
+        case 51: menu = 2;
+
+            break;
+        case 52: menu = 3;
+
+        case 53: menu = 4;
+
+            break;
+        case 54: menu = 5;
+            break;
+        case 55: menu = 6;
+            break;
+        case 56: menu = 7;
+            break;
+        case 13: {
+            if (menu == 0) {
+                system("cls");
+                MenuOfCharacterClass(&begin);
+                GameMenuRealization(begin);
+            }
+            else if (menu == 1) {
+                LoadGame(&begin);
+                LoadCharacter1(&begin);
+                LoadCharacter2(&begin);
+                LoadCharacter3(&begin);
+                LoadCheckDeath(&begin);
+                GameMenuRealization(begin);
+
+                //GameMenuRealization(begin);
+                
+            }
+            else if (menu == 2) {
+                system("cls");
+                cout << "Завершение работы.";
+                Sleep(1000);
+                return 0;
+            }
+            break;
+        }
+        }
+        if (menu < 0) { menu = 2; }
+        else if (menu > menu_points - 1) { menu = 0; }
+    }
+
+    return 0;
+}
